@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Denyok's Super Cool Page</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+   
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+
+
+    .emoji {
+      height: 1em;
+      vertical-align: middle;
+    }
+
+    .marquee {
+      font-size: 20px;
+      margin: 10px 0;
+      color: #0ff;
+    }
+
+    .button {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      background-color: #fff;
+      border: none;
+      border-radius: 10px;
+      color: #000;
+    }
+
+    .gallery-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .contact-links a {
+      display: inline-block;
+      margin-right: 15px;
+      color: #0ff;
+      text-decoration: none;
+    }
+
+    .contact-links img {
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="container">
+  <h1>Welcome to Denyok's Page! <img src="gifs/frutiger-aero.gif" alt="Frutiger Aero" class="emoji"></h1>
+
+  <marquee class="marquee" behavior="scroll" direction="left">
+    This is my personal corner of the internet... year 2006 baby!!! :)
+  </marquee>
+
+  <p>Hey there! You've just landed on the most awesome page of 2006. Check out my stuff, my cats, and some snacks!</p>
+
+  <hr>
+
+  <h2>About Me</h2>
+  <p>My name is Denyok <img src="gifs/frutiger-aero.gif" alt="Frutiger Aero" class="emoji">. I love cats, HTML, wheat fields, the sky, and sleeping under clouds. I made this page in pure HTML because it's the real web magic!</p>
+
+  <h2>Listen this :)</h2>
+
+  <audio id="my-audio">
+    <source src="audio/denyok-theme.mp3" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <button id="play-music" class="button">🎶 Play Music</button>
+
+  <h2>Latest Cool Things</h2>
+  <ul>
+    <li>✨ finally learned to solder (finally lol)</li>
+    <li>📸 Shooting photos with my Canon EOS 550D — photography is life!</li>
+    <li>🖥️ Upgraded my PC with 1GB RAM + Windows 7 btw <img src="gifs/windows-windows-7-computer-icon-frutiger-aeroЗ.gif" alt="Windows 7" class="emoji"></li>
+  </ul>
+
+  <h2>contact-links</h2>
+  <div class="contact-links">
+    <a href="https://t.me/denyok" target="_blank">
+      <img src="images/icon-telegram.png" alt="Telegram" />
+      Telegram
+    </a>
+    <a href="https://steamcommunity.com/id/Denyok228/" target="_blank">
+      <img src="images/icon-steam.png" alt="Steam" />
+      Steam
+    </a>
+  </div>
+
+  <a href="gallery.html" class="gallery-button">🖼️ My Gallery</a>
+
+  <hr>
+  <p>Made with 💾 by Denyok - © 2006</p>
+</div>
+
+<script>
+  const canvas = document.getElementById('bg');
+  const ctx = canvas.getContext('2d');
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  const bubbles = [];
+
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function createBubble() {
+    return {
+      x: random(0, width),
+      y: height + 20,
+      radius: random(5, 20),
+      speed: random(1, 3),
+      waveOffset: random(0, 100),
+      waveAmplitude: random(5, 15),
+      waveFrequency: random(0.01, 0.03),
+      alpha: random(0.5, 1)
+    };
+  }
+
+  function drawBubble(b) {
+    const wave = Math.sin(b.y * b.waveFrequency + b.waveOffset) * b.waveAmplitude;
+    ctx.beginPath();
+    ctx.arc(b.x + wave, b.y, b.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(173, 216, 230, ${b.alpha})`;
+    ctx.fill();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    for (let i = 0; i < bubbles.length; i++) {
+      const b = bubbles[i];
+      b.y -= b.speed;
+      drawBubble(b);
+    }
+
+    for (let i = bubbles.length - 1; i >= 0; i--) {
+      if (bubbles[i].y + bubbles[i].radius < 0) {
+        bubbles.splice(i, 1);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  function spawnBubbles(count = 30) {
+    for (let i = 0; i < count; i++) {
+      bubbles.push(createBubble());
+    }
+  }
+
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+
+  const audio = document.getElementById('my-audio');
+  const button = document.getElementById('play-music');
+
+  button.addEventListener('click', () => {
+    audio.play();
+    spawnBubbles(60);
+    setInterval(() => spawnBubbles(10), 500);
+  });
+
+  animate();
+</script>
+
+</body>
+</html>
